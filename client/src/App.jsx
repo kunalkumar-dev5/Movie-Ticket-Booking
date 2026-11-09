@@ -11,7 +11,7 @@ import Footer from './components/Footer.jsx'
 
 const App = () => {
 
-  const isAdminRoute = useLocation().pathname.startsWith('./admin')
+  const isAdminRoute = useLocation().pathname.startsWith('/admin')
   return (
     <>
       <Toaster />

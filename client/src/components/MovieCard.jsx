@@ -1,10 +1,15 @@
 import { StarIcon, Ticket } from 'lucide-react'
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import timeFormat from '../lib/timeFormat'
 
 const MovieCard = ({ movie }) => {
     const navigate = useNavigate()
+    const rating = Number(movie.vote_average)
+    const releaseDate = movie.release_date ? new Date(`${movie.release_date}T00:00:00`) : null
+    const releaseYear = releaseDate && !Number.isNaN(releaseDate.getTime())
+        ? releaseDate.getFullYear()
+        : 'Coming soon'
+    const runtime = Number(movie.runtime)
 
     const handleNavigate = () => {
         navigate(`/movies/${movie._id}`)
@@ -12,69 +17,67 @@ const MovieCard = ({ movie }) => {
     }
 
     return (
-        <div className='group relative flex flex-col justify-between p-3.5 bg-gray-900/70 hover:bg-gray-900 border border-gray-800/80 hover:border-gray-700/80 rounded-2xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10 w-full'>
-
-            {/* Poster / Backdrop Image Container */}
-            <div
+        <article className='group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-gray-900 to-gray-950 shadow-lg shadow-black/20 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10'>
+            <button
+                type='button'
                 onClick={handleNavigate}
-                className='relative w-full h-52 overflow-hidden rounded-xl cursor-pointer bg-gray-800/50'
+                aria-label={`View ${movie.title} details`}
+                className='relative block w-full overflow-hidden bg-gray-800'
             >
                 <img
-                    src={movie.backdrop_path}
-                    alt={movie.title}
-                    className='w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out'
+                    src={movie.poster_path || movie.backdrop_path}
+                    alt={`${movie.title} poster`}
+                    loading='lazy'
+                    className='aspect-[2/3] w-full object-cover transition duration-500 ease-out group-hover:scale-105'
                 />
-
-                {/* Subtle dark gradient overlay for depth */}
-                <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity' />
-
-                {/* Language Badge */}
+                <span className='absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent' />
                 {movie.original_language && (
-                    <span className='absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider text-gray-200 border border-white/10 shadow-sm'>
+                    <span className='absolute left-3 top-3 rounded-full border border-white/15 bg-black/55 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur-md'>
                         {movie.original_language}
                     </span>
                 )}
-            </div>
+            </button>
 
-            {/* Movie Info */}
-            <div className='flex flex-col flex-grow pt-3 pb-1'>
-                <h3
-                    onClick={handleNavigate}
-                    className='font-semibold text-base text-gray-100 group-hover:text-primary transition-colors duration-200 truncate cursor-pointer'
-                    title={movie.title}
-                >
+            <div className='flex flex-1 flex-col p-4'>
+                <h3 className='line-clamp-2 min-h-12 text-base font-semibold leading-6 text-white transition-colors group-hover:text-primary' title={movie.title}>
                     {movie.title}
                 </h3>
 
-                <p className='text-xs text-gray-400 mt-1.5 flex items-center gap-1.5 flex-wrap'>
-                    <span>{new Date(movie.release_date).getFullYear()}</span>
-                    <span className='text-gray-600'>•</span>
-                    <span className='truncate max-w-[130px]'>
-                        {movie.genres?.slice(0, 2).map((genre) => genre.name).join(' | ')}
-                    </span>
-                    <span className='text-gray-600'>•</span>
-                    <span>{timeFormat(movie.runtime)}</span>
-                </p>
-            </div>
+                <div className='mt-2 flex min-h-10 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-400'>
+                    <span>{releaseYear}</span>
+                    {movie.genres?.length > 0 && (
+                        <>
+                            <span aria-hidden='true' className='text-gray-600'>•</span>
+                            <span className='line-clamp-1'>{movie.genres.slice(0, 2).map((genre) => genre.name).join(' · ')}</span>
+                        </>
+                    )}
+                    {Number.isFinite(runtime) && runtime > 0 && (
+                        <>
+                            <span aria-hidden='true' className='text-gray-600'>•</span>
+                            <span>{timeFormat(runtime)}</span>
+                        </>
+                    )}
+                </div>
 
-            {/* Action Bar */}
-            <div className='flex items-center justify-between pt-3 mt-auto border-t border-gray-800/60'>
-                <button
-                    onClick={handleNavigate}
-                    className='flex items-center gap-1.5 px-4 py-2 text-xs font-semibold bg-primary hover:bg-primary-dull active:scale-95 transition-all duration-200 rounded-full cursor-pointer text-white shadow-sm shadow-primary/25 hover:shadow-primary/40'
-                >
-                    <Ticket className='w-3.5 h-3.5' />
-                    <span>Buy Tickets</span>
-                </button>
+                <div className='mt-auto flex items-center justify-between gap-2 border-t border-white/10 pt-4'>
+                    <button
+                        type='button'
+                        onClick={handleNavigate}
+                        className='inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-xs font-semibold text-white shadow-md shadow-primary/20 transition hover:bg-primary-dull active:scale-95'
+                    >
+                        <Ticket className='h-3.5 w-3.5' />
+                        <span>View details</span>
+                    </button>
 
-                <div className='flex items-center gap-1 text-xs text-gray-300 bg-gray-800/60 px-2.5 py-1.5 rounded-full border border-gray-700/40'>
-                    <StarIcon className='w-3.5 h-3.5 text-primary fill-primary' />
-                    <span className='font-semibold text-gray-100'>
-                        {movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}
-                    </span>
+                    <div className='flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-gray-300'>
+                        <StarIcon className='h-3.5 w-3.5 fill-primary text-primary' />
+                        <span className='font-semibold text-white'>
+                            {Number.isFinite(rating) ? rating.toFixed(1) : 'N/A'}
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </article>
     )
 }
 
