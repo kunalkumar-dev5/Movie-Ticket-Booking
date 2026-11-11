@@ -20,7 +20,7 @@ const HeroSection = () => {
                     <ClockIcon className='w-4.5 h-4.5' />2h 38m
                 </div>
             </div>
-            <p className='max-w-md text-gray-300'>The film begins with Peter Quill's iconic cry, "Showtime, A-holes!", setting up a journey where the team bickers constantly over everything from being called "trash pandas" to Drax's brutally honest breakdown that "when you're ugly and someone loves you, you know they love you for who you are</p>
+            <p className="text-gray-300 mt-2 text-sm leading-tight max-w-xl">The film begins with Peter Quill's iconic cry, "Showtime, A-holes!", setting up a journey where the team bickers constantly over everything from being called "trash pandas" to Drax's brutally honest breakdown that "when you're ugly and someone loves you, you know they love you for who you are</p>
 
             <button onClick={()=> navigate('/movies')} className='flex items-center gap-1 px-6 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer'>
                 Explore Movies
