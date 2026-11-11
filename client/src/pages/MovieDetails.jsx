@@ -1,21 +1,27 @@
-import { ArrowLeft, CalendarDays, Clock3, Heart, PlayCircle, StarIcon } from "lucide-react"
+import { Heart, PlayCircle, StarIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { dummyDateTimeData, dummyShowsData } from "../assets/assets"
 import BlurCircle from "../components/BlurCircle"
+import MovieCard from "../components/MovieCard"
 import timeFormat from "../lib/timeFormat"
 import DateSelect from "../components/DateSelect"
+import Loading from "../components/Loading"
 
 const MovieDetails = () => {
+  const navigate = useNavigate()
   const { id } = useParams()
   const [show, setShow] = useState(null)
 
   const getShow = () => {
     const show = dummyShowsData.find((show) => String(show.id) === id)
-    setShow({
-      movie: show,
-      dateTime: dummyDateTimeData,
-    })
+    if (show) {
+      setShow({
+        movie: show,
+        dateTime: dummyDateTimeData,
+      })
+    }
+
   }
   useEffect(() => {
     getShow()
@@ -71,19 +77,19 @@ const MovieDetails = () => {
 
       <DateSelect dateTime={show.dateTime} id={id} />
 
-      <p>You May Also Like</p>
-      <div>
+      <p className="text-lg font-medium mt-20 mb-8">You May Also Like</p>
+      <div className='group grid grid-cols-4 gap-4 md:gap-4 mt-8 max-w-4xl mx-auto'>
         {dummyShowsData.slice(0, 4).map((movie, index) => (
           <MovieCard key={index} movie={movie} />
         ))}
       </div>
-      <div>
-        
+      <div className="flex justify-center mt-20">
+        <button onClick={() => { navigate('/movies'); scroll(0, 0) }} className="px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-md font-medium cursor-pointer">Show more</button>
       </div>
     </div>
 
 
-  ) : <div>Loading...</div>
+  ) : <Loading/>
 }
 
 export default MovieDetails
