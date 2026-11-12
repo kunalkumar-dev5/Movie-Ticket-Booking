@@ -10,7 +10,7 @@ import { Toaster } from 'react-hot-toast'
 import Footer from './components/Footer.jsx'
 import Layout from './pages/admin/Layout.jsx'
 import Dashboard from './pages/admin/Dashboard.jsx'
-import AddShows from './pages/admin/addShows.jsx'
+import AddShows from './pages/admin/AddShows.jsx'
 import ListShows from './pages/admin/ListShows.jsx'
 import ListBookings from './pages/admin/ListBookings.jsx'
 
